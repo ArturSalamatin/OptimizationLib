@@ -8,9 +8,9 @@ namespace OptLib
 		class testOptimizer
 		{
 		public:
-			static void testBicection()
+			static void testBisection()
 			{
-				std::cout << "******Bicection test start*****\n";
+				std::cout << "******Bisection test start*****\n";
 				ConcreteOptimizer::Bisection Algo{ new ConcreteFunc::FunctionWithHess{}, {{{-2}, {5}}} };
 				std::cout << "Current simplex is:\n" << "  " << Algo.GuessDomain() << "\n";
 				for (int i = 0; i < 10; i++)
@@ -18,7 +18,7 @@ namespace OptLib
 					Algo.Proceed();
 					std::cout << "Current simplex is:\n" << "  " << Algo.GuessDomain() << "\n";
 				}
-				std::cout << "******Bicection test end*******\n\n";
+				std::cout << "******Bisection test end*******\n\n";
 			}
 			
 			static void testDichotomy()
@@ -51,23 +51,23 @@ namespace OptLib
 
 				std::cout <<
 
-			static void testOverallOptimizerWithBicection()
+			static void testOverallOptimizerWithBisection()
 			{
-				std::cout << "******OverallOptimizer With Bicection test start*****\n";
+				std::cout << "******OverallOptimizer With Bisection test start*****\n";
 
 				OptimizerParams prm{ 0.001, 0.001, 101 };
 				ConcreteFunc::Function f{};
 				ConcreteOptimizer::Bisection Algo{ &f, {{{-2}, {5}}} };
 				Optimizer<1, FuncInterface::IFunc<1>, ConcreteState::StateSegment> opt{ &Algo, prm };
 
-				std::cout << "Optimization with Bicection started...\n";
+				std::cout << "Optimization with Bisection started...\n";
 				opt.Optimize();
-				std::cout << "Optimization with Bicection finalized.\n";
+				std::cout << "Optimization with Bisection finalized.\n";
 
 				std::cout << "Total number of iterations is s = " << opt.CurIterCount() << '\n';
 				std::cout << "Final guess is x = " << opt.CurrentGuess() << '\n';
 
-				std::cout << "******OverallOptimizer With Bicection test end*******\n\n";
+				std::cout << "******OverallOptimizer With Bisection test end*******\n\n";
 			}
 
 			/*static void testDirect1DFuncAlongGrad()
