@@ -8,9 +8,24 @@ namespace OptLib
 		/// <summary>
 		/// Simplexes for direct methods on segments (in 1D) must not be sorted with respect to f(x). Must be sorted with respect to x == x[0]
 		/// </summary>
-		using  StateDichotomy = StateSegment;
+		using StateDichotomy = StateSegment;
 
 	} // ConcreteOptimizer
+
+	namespace StateParams
+	{
+		struct DichotomyParams
+		{
+			SetOfPoints<2, Point<1>> StartSegment;
+			DichotomyParams(SetOfPoints<2, Point<1>>&& sop)
+				:StartSegment{std::move(sop)}
+			{}
+			ConcreteState::StateDichotomy CreateState(FuncInterface::IFunc<1>* f)
+			{
+				return { std::move(StartSegment), f };
+			}
+		};
+	}
 
 	namespace ConcreteOptimizer
 	{
