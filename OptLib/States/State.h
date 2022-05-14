@@ -67,7 +67,21 @@ namespace OptLib
 		template<size_t dim>
 		class StateStochastic : public StateInterface::IState<dim>
 		{
+		protected:
+			double temperature;
+			double x;
+			double(*Temperature) (double);
+			double endTemperature;
+		public:
+			bool IsConverged(double abs_tol, double rel_tol) const override
+			{
+				
+			}
 
+			virtual void UpdateState()
+			{
+				
+			}
 		};
 	} // ConcreteState
 } // OptLib
