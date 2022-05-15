@@ -11,6 +11,17 @@ namespace OptLib
 	}
 	namespace StateParams
 	{
+		struct AnnealingParams
+		{
+		public:
+			using OptAlgo = OptLib::ConcreteOptimizer::Annealing;
+			using StateType = OptLib::ConcreteState::StateStochastic;
+		public:
+			StateType CreateState(double initialTemperature, double XGuess, double (*TemperatureFunction) (double, int))
+			{
+				StateType state = StateType{initialTemperature, XGuess, TemperatureFunction, 0};
+				return state;
+			}
 	}
 }
 

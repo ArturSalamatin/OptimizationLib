@@ -70,17 +70,21 @@ namespace OptLib
 		protected:
 			double temperature;
 			double x;
-			double(*Temperature) (double);
-			double endTemperature;
+			double(*Temperature) (double, int);
+			int iteration;
+			//double endTemperature;
 		public:
-			bool IsConverged(double abs_tol, double rel_tol) const override
+			bool IsConverged(double endTemperature, double additionalParameter = 1) const override
 			{
-				
+				if (temperature > endTemperature) 
+					return true;
+				return false;
 			}
 
 			virtual void UpdateState()
 			{
-				
+				iteration++;
+				temperature = Temperature(temperature, iteration);
 			}
 		};
 	} // ConcreteState
