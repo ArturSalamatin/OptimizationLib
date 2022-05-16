@@ -21,12 +21,15 @@ namespace OptLib
 			using StateType = OptLib::ConcreteState::StateStochastic;
 			double h;
 			double endTemperature;
+			double initialTemperature;
+			double (*TemperatureFunction) (double, int);
+			Point<dim> currentPoint;
 		public:
-			AnnealingParams(SetOfPoints<dim + 1, Point<dim>>&& sop, double step, double temperature_end) :
-				h{ step }, endTemperature{ temperature_end } {}
-			StateType CreateState(double initialTemperature, double (*TemperatureFunction) (double, int))
+			AnnealingParams(Point<dim>&& sop, double step, double temperature_end) :
+				h{ step }, endTemperature{ temperature_end }, currentPoint{ std::move(sop) } {}
+			StateType CreateState(FuncInterface::IFunc<dim>* f)
 			{
-				StateType state = StateType{initialTemperature, TemperatureFunction, 0};
+				state = new StateStochastic(SetOfPoints<dim + 1, Point<dim>> && State, f, initialTemperature, TemperatureFunction)
 				return state;
 			}
 	}
