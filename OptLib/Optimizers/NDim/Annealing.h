@@ -16,10 +16,14 @@ namespace OptLib
 	{
 		struct AnnealingParams
 		{
-		public:
+		protected:
 			using OptAlgo = OptLib::ConcreteOptimizer::Annealing;
 			using StateType = OptLib::ConcreteState::StateStochastic;
+			double h;
+			double endTemperature;
 		public:
+			AnnealingParams(SetOfPoints<dim + 1, Point<dim>>&& sop, double step, double temperature_end) :
+				h{ step }, endTemperature{ temperature_end } {}
 			StateType CreateState(double initialTemperature, double (*TemperatureFunction) (double, int))
 			{
 				StateType state = StateType{initialTemperature, TemperatureFunction, 0};
