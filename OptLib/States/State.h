@@ -80,6 +80,9 @@ namespace OptLib
 				return x;
 			}
 		public:
+			StateStochastic(SetOfPoints<dim + 1, Point<dim>>&& State, FuncInterface::IFunc<dim>* f, double initialTemperature, double (*TemperatureFunction) (double, int)) : 
+				StateInterface::IState<dim>(State, f), 
+				temperature{ initialTemperature }, Temperature{ TemperatureFunction }, iteration{ 0 } {}
 			bool IsConverged(double endTemperature, double) const override
 			{
 				return temperature > endTemperature ? true : false;

@@ -6,7 +6,10 @@ namespace OptLib
 	namespace ConcreteOptimizer
 	{
 		class Annealing {
+			static PointVal<dim> Proceed(ConcreteState::StateStochastic<dim>& State, const FuncInterface::IFunc<dim>* f) 
+			{
 
+			}
 		};
 	}
 	namespace StateParams
@@ -17,9 +20,9 @@ namespace OptLib
 			using OptAlgo = OptLib::ConcreteOptimizer::Annealing;
 			using StateType = OptLib::ConcreteState::StateStochastic;
 		public:
-			StateType CreateState(double initialTemperature, double XGuess, double (*TemperatureFunction) (double, int))
+			StateType CreateState(double initialTemperature, double (*TemperatureFunction) (double, int))
 			{
-				StateType state = StateType{initialTemperature, XGuess, TemperatureFunction, 0};
+				StateType state = StateType{initialTemperature, TemperatureFunction, 0};
 				return state;
 			}
 	}
