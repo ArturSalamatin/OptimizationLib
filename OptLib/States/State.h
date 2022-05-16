@@ -81,7 +81,7 @@ namespace OptLib
 				return false;
 			}
 
-			virtual void UpdateState()
+			void UpdateState()
 			{
 				iteration++;
 				temperature = Temperature(temperature, iteration);
