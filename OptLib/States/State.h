@@ -69,22 +69,27 @@ namespace OptLib
 		{
 		protected:
 			double temperature;
-			double x;
 			double(*Temperature) (double, int);
 			int iteration;
-			//double endTemperature;
-		public:
-			bool IsConverged(double endTemperature, double additionalParameter = 1) const override
+			Point<dim> NextRandomState(Point<dim> x, double h) 
 			{
-				if (temperature > endTemperature) 
-					return true;
-				return false;
+				for (int i = 0; i < dim; i++) {
+					double r = ((double)rand() / RAND_MAX);
+					x[i] = 2 * r * h + x - h;
+				}
+				return x;
+			}
+		public:
+			bool IsConverged(double endTemperature, double) const override
+			{
+				return temperature > endTemperature ? true : false;
 			}
 
-			void UpdateState()
+			void UpdateState(double h)
 			{
 				iteration++;
 				temperature = Temperature(temperature, iteration);
+				ItsGuess = NextRandomState(Guess().P, h);
 			}
 		};
 	} // ConcreteState
