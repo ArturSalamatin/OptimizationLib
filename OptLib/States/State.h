@@ -95,8 +95,8 @@ namespace OptLib
 			{
 				return temperature > endTemperature ? true : false;
 			}
-			void ChangeGuess(PointVal<dim> newGuess) {
-				ItsGuess = newGuess;
+			void ChangeGuess() {
+				ItsGuess = currentGuess;
 			}
 			void UpdateState()
 			{

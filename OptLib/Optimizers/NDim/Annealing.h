@@ -11,22 +11,16 @@ namespace OptLib
 				double dp = exp((State.Guess().Val - State.currentGuess.Val) / t);
 				if (dp > 1)
 				{
-
+					State.ChangeGuess();
 				}
-				//            if (dp > 1)
-				//            {
-				//                x1 = x2;
-				//                E1 = E2;
-				//            }
-				//            else
-				//            {
-				//                double p = (double)rand() / RAND_MAX;
-				//                if (dp > p)
-				//                {
-				//                    x1 = x2;
-				//                    E1 = E2;
-				//                }
-				//            }
+				else 
+				{
+					double p = (double)rand() / RAND_MAX;
+					if (dp > p) 
+					{
+						State.ChangeGuess();
+					}
+				}
 			}
 		};
 	}
