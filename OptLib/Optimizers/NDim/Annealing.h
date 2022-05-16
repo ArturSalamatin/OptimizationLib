@@ -8,7 +8,25 @@ namespace OptLib
 		class Annealing {
 			static PointVal<dim> Proceed(ConcreteState::StateStochastic<dim>& State, const FuncInterface::IFunc<dim>* f) 
 			{
+				double dp = exp((State.Guess().Val - State.currentGuess.Val) / t);
+				if (dp > 1)
+				{
 
+				}
+				//            if (dp > 1)
+				//            {
+				//                x1 = x2;
+				//                E1 = E2;
+				//            }
+				//            else
+				//            {
+				//                double p = (double)rand() / RAND_MAX;
+				//                if (dp > p)
+				//                {
+				//                    x1 = x2;
+				//                    E1 = E2;
+				//                }
+				//            }
 			}
 		};
 	}

@@ -82,6 +82,7 @@ namespace OptLib
 				return x;
 			}
 		public:
+			PointVal<dim> currentGuess;
 			PointVal<dim> bestGuess;
 			StateStochastic(Point<dim>&& State, FuncInterface::IFunc<dim>* f, double initialTemperature, double (*TemperatureFunction) (double, int), double step, double temperature_end) :
 				StateInterface::IState<dim>(State, f), 
@@ -94,13 +95,15 @@ namespace OptLib
 			{
 				return temperature > endTemperature ? true : false;
 			}
-
+			void ChangeGuess(PointVal<dim> newGuess) {
+				ItsGuess = newGuess;
+			}
 			void UpdateState()
 			{
 				iteration++;
 				temperature = Temperature(temperature, iteration);
-				ItsGuess = FuncInterface::CreateFromPoint(NextRandomState(Guess().P, h),f);
-				if (ItsGuess < bestGuess) bestGuess = ItsGuess;
+				currentGuess = FuncInterface::CreateFromPoint(NextRandomState(Guess().P, h),f);
+				if (currentGuess < bestGuess) bestGuess = currentGuess;
 			}
 		};
 	} // ConcreteState
