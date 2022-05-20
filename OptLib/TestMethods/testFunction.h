@@ -89,7 +89,7 @@ namespace OptLib
 
 				ConcreteFunc::FuncAlongGradDirection<2> F{ f, x };
 
-				Point<1> gamma{ {0.2} };
+				Point<1> gamma{{0.2}};
 				std::cout << "It's value at gamma = " << gamma << "\nand              x0 = " << x << "\nis                f = " << F(gamma) << ". Must be 2.88.\n";
 				std::cout << "It's gradient is " << " grad[ f ] = " << F.grad(gamma) << ". Must be { 76.8 }.\n";
 

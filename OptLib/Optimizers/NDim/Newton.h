@@ -5,15 +5,16 @@ namespace OptLib
 {
 	namespace ConcreteState
 	{
-		template<size_t dim>
-		class StateNewton :public ConcreteState::StatePoint<dim>
+		/*class StateNewton :public ConcreteState::StatePoint<dim>
 		{
 		public:
 			StateNewton(Point<dim>&& x0, const FuncInterface::IFuncWithHess<dim>* f)
 			{
 				ItsGuess = FuncInterface::CreateFromPoint<dim>(std::move(x0), f);
 			}
-		};
+		};*/
+		template<size_t dim>
+		using StateNewton = ConcreteState::StatePoint<dim>;
 	} // ConcreteState
 
 	namespace ConcreteOptimizer

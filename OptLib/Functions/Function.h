@@ -143,14 +143,11 @@ namespace OptLib
 			}
 		};
 
-
-
-
 		template <size_t dim>
 		class FuncAlongGradDirection : public FuncInterface::IFuncWithGrad<1>
 		{
 		public:
-			FuncAlongGradDirection(FuncInterface::IFuncWithGrad<dim>* f_pointer, const Point<dim>& x0_) noexcept :
+			FuncAlongGradDirection(const FuncInterface::IFuncWithGrad<dim>* f_pointer,Point<dim>& x0_) noexcept :
 				x0{ x0_ }, grad0{ f_pointer->grad(x0_) }, f{ *f_pointer }{}
 
 			virtual double operator () (const Point<1>& gamma) const override
@@ -169,7 +166,7 @@ namespace OptLib
 			Point<dim> x0;
 			Point<dim> grad0;
 
-			FuncInterface::IFuncWithGrad<dim>&  f;// function to optimize
+			const FuncInterface::IFuncWithGrad<dim>&  f;// function to optimize
 		};
 
 		template<size_t dimX, size_t dimP>

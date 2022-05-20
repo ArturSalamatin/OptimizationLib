@@ -41,6 +41,11 @@ namespace OptLib
 		protected:
 			PointVal<dim> dx{};
 		public:
+			StatePoint() {};
+			StatePoint(Point<dim>&& x0, const FuncInterface::IFuncWithHess<dim>* f)
+			{
+				ItsGuess = FuncInterface::CreateFromPoint<dim>(std::move(x0), f);
+			}
 			bool IsConverged(double abs_tol, double rel_tol) const override
 			{
 				auto& std = dx;

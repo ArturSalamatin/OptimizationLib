@@ -41,6 +41,7 @@
 #include "OptLib/Optimizers/OneDim/Dichotomy.h"
 #include "OptLib/Optimizers/NDim/NelderMead.h"
 #include "OptLib/Optimizers/NDim/Newton.h"
+#include "OptLib/Optimizers/NDim/GradientDescent.h"
 
 #include "OptLib/Optimizers/OverallOptimizer.h"
 

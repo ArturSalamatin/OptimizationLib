@@ -198,6 +198,47 @@ namespace OptLib
 		//		std::cout << "Final guess is x = " << opt.CurrentGuess() << '\n';
 				std::cout << "******OverallOptimizer With Newton test end*******\n\n";
 			}
+			static void testGradientDescent()
+			{
+				std::cout << "******GradientDescent test start*****\n";
+				FuncInterface::IFuncWithGrad<1>* f = new ConcreteFunc::Function();
+				PointVal<1> x{ {5.0},f->operator()({5.0}) };
+				SetOfPoints<2, Point<1>> StartSegment{ {{10.0},{0.0}} };
+				StateParams::GoldenSectionParams BisPrm(std::move(StartSegment));
+				StateParams::GradientDescentParams<1, StateParams::GoldenSectionParams> prm(std::move(x));
+				auto State = prm.CreateState(f, &BisPrm);
+				std::cout << "Start Point is:\n" << State.Guess() <<"\n";
+				auto result = ConcreteOptimizer::GradientDescent<1, ConcreteOptimizer::GoldenSection,
+					ConcreteState::StateGoldenSection, StateParams::GoldenSectionParams>::Proceed(State, f);
+
+				std::cout << "Result is: " << result << "\n";
+				std::cout << "******GradientDescent test end*******\n\n";
+			}
+
+			static void testOverallOptimizerWithGradientDescent()
+			{
+				std::cout << "******OverallOptimizer With Gradient Descent test start*****\n";
+
+				OptimizerParams prm{ 0.001, 0.001, 10 };
+				//ConcreteFunc::Paraboloid2D f{ SetOfPoints<5,Point<5>>{ { {1,1,1,0}, {0,1}}} };
+				FuncInterface::IFuncWithGrad<1>* f = new ConcreteFunc::Function();
+				PointVal<1> x{ {5.0},f->operator()({5.0}) };
+				SetOfPoints<2, Point<1>> StartSegment{ {{-10.0},{10.0}} };
+				StateParams::GoldenSectionParams BisPrm(std::move(StartSegment));
+				StateParams::GradientDescentParams<1, StateParams::GoldenSectionParams> prms(std::move(x));
+				auto State = prms.CreateState(f, &BisPrm);
+				Optimizer<1, ConcreteState::StateGradientDescent<1, StateParams::GoldenSectionParams>,
+					FuncInterface::IFuncWithGrad> opt{ &State, f, prm };
+
+				std::cout << "Optimization with Gradient Descent started...\n";
+				opt.Optimize < ConcreteOptimizer::GradientDescent<1, ConcreteOptimizer::GoldenSection,
+					ConcreteState::StateGoldenSection, StateParams::GoldenSectionParams>> ();
+				std::cout << "Optimization with Gradient Descent finalized.\n";
+
+				//		std::cout << "Total number of iterations is s = " << opt.CurIterCount() << '\n';
+				//		std::cout << "Final guess is x = " << opt.CurrentGuess() << '\n';
+				std::cout << "******OverallOptimizer With Gradient Descent test end*******\n\n";
+			}
 		};
 
 	} // UnitTests

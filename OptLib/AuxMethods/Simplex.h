@@ -424,6 +424,11 @@ namespace OptLib
 	{
 		return PointVal<dim>{std::move(p.P * val), p.Val* val};
 	}
+	template<size_t dim>
+	PointVal<dim> operator* (PointVal<dim> p1, Point<dim> p2)
+	{
+		return PointVal<dim>{std::move(p1.P* p2), 0.0};
+	}
 	/// elementwise division of vector * vector
 	template<size_t dim>
 	PointVal<dim> operator/(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
