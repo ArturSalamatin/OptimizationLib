@@ -10,20 +10,7 @@ namespace OptLib
 		public:
 			static PointVal<dim> Proceed(ConcreteState::StateStochastic<dim>& State, const FuncInterface::IFunc<dim>* f)
 			{
-				PointVal<dim> currentGuess{ FuncInterface::CreateFromPoint(State.NextRandomState(State.Guess().P, State.h), f) };
-				double dp = exp((State.Guess().Val - currentGuess.Val) / State.temperature);
-				if (dp > 1)
-				{
-					State.ChangeGuess(currentGuess);
-				}
-				else
-				{
-					double p = (double)rand() / RAND_MAX;
-					if (dp > p)
-					{
-						State.ChangeGuess(currentGuess);
-					}
-				}
+				State.UpdateState();
 				return State.Guess();
 			}
 		};
