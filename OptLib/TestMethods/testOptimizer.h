@@ -162,7 +162,7 @@ namespace OptLib
 				std::cout << "******OverallOptimizer With Nelder Mead test end*******\n\n";
 			}
 			static double TestTemperature(double t, int k) {
-				return t -= 1;
+				return 1 - (double)k / 1000;
 			}
 			static void testOverallOptimizerAnnealing()
 			{
@@ -171,7 +171,7 @@ namespace OptLib
 				OptimizerParams prm{ 0.001, 0.001, 500 };
 				ConcreteFunc::Paraboloid2D f{ SetOfPoints<2,Point<2>>{ { {1,0}, {0,10}}} };
 				Point<2> P{ { 0, -1} };
-				ConcreteState::StateStochastic<2> State{std::move(P), &f, 1000, TestTemperature, 0.7, 0 };
+				ConcreteState::StateStochastic<2> State{std::move(P), &f, 1000, TestTemperature, 0.07, 0 };
 
 				Optimizer<2, ConcreteState::StateStochastic<2>, FuncInterface::IFunc> opt{ &State, &f, prm };
 

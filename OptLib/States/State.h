@@ -77,7 +77,7 @@ namespace OptLib
 			{
 				for (int i = 0; i < dim; i++) {
 					double r = ((double)rand() / RAND_MAX);
-					x[i] = 2 * r * h + x - h;
+					x[i] = 2.0 * r * h + x[i] - h;
 				}
 				return x;
 			}

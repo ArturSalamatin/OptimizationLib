@@ -24,6 +24,7 @@ namespace OptLib
 						State.ChangeGuess(currentGuess);
 					}
 				}
+				return State.Guess();
 			}
 		};
 	}
