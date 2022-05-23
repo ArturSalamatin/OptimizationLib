@@ -52,7 +52,7 @@ int main()
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithGrid();
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithNelderMead();
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithNewton();
-
+	OptLib::UnitTests::testOptimizer::testOverallOptimizerAnnealing();
 	// test regression
 
 	OptLib::UnitTests::testLikelihood::GenerateDataSet<1,1>({1.0}, new OptLib::ConcreteFuncParam::LinearFunc());

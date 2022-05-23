@@ -161,7 +161,28 @@ namespace OptLib
 				std::cout << "Final guess is x = " << opt.CurrentGuess() << '\n';
 				std::cout << "******OverallOptimizer With Nelder Mead test end*******\n\n";
 			}
+			static double TestTemperature(double t, int k) {
+				return t -= 1;
+			}
+			static void testOverallOptimizerAnnealing()
+			{
+				std::cout << "******OverallOptimizer Annealing test start*****\n";
 
+				OptimizerParams prm{ 0.001, 0.001, 500 };
+				ConcreteFunc::Paraboloid2D f{ SetOfPoints<2,Point<2>>{ { {1,0}, {0,10}}} };
+				Point<2> P{ { 0, -1} };
+				ConcreteState::StateStochastic<2> State{std::move(P), &f, 1000, TestTemperature, 0.7, 0 };
+
+				Optimizer<2, ConcreteState::StateStochastic<2>, FuncInterface::IFunc> opt{ &State, &f, prm };
+
+				std::cout << "Optimization Annealing started...\n";
+				opt.Optimize<ConcreteOptimizer::Annealing<2>>();
+				std::cout << "Optimization Annealing finalized.\n";
+
+				std::cout << "Total number of iterations is s = " << opt.CurIterCount() << '\n';
+				std::cout << "Final guess is x = " << opt.CurrentGuess() << '\n';
+				std::cout << "******OverallOptimizer Annealing test end*******\n\n";
+			}
 
 			/*static void testDirect1DFuncAlongGrad()
 			{

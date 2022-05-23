@@ -5,20 +5,23 @@ namespace OptLib
 {
 	namespace ConcreteOptimizer
 	{
+		template<size_t dim>
 		class Annealing {
-			static PointVal<dim> Proceed(ConcreteState::StateStochastic<dim>& State, const FuncInterface::IFunc<dim>* f) 
+		public:
+			static PointVal<dim> Proceed(ConcreteState::StateStochastic<dim>& State, const FuncInterface::IFunc<dim>* f)
 			{
-				double dp = exp((State.Guess().Val - State.currentGuess.Val) / t);
+				PointVal<dim> currentGuess{ FuncInterface::CreateFromPoint(State.NextRandomState(State.Guess().P, State.h), f) };
+				double dp = exp((State.Guess().Val - currentGuess.Val) / State.temperature);
 				if (dp > 1)
 				{
-					State.ChangeGuess();
+					State.ChangeGuess(currentGuess);
 				}
-				else 
+				else
 				{
 					double p = (double)rand() / RAND_MAX;
-					if (dp > p) 
+					if (dp > p)
 					{
-						State.ChangeGuess();
+						State.ChangeGuess(currentGuess);
 					}
 				}
 			}
@@ -26,24 +29,26 @@ namespace OptLib
 	}
 	namespace StateParams
 	{
+		template<size_t dim>
 		struct AnnealingParams
 		{
 		protected:
-			using OptAlgo = OptLib::ConcreteOptimizer::Annealing;
-			using StateType = OptLib::ConcreteState::StateStochastic;
 			double h;
 			double endTemperature;
 			double initialTemperature;
 			double (*TemperatureFunction) (double, int);
 			Point<dim> currentPoint;
 		public:
+			using OptAlgo = OptLib::ConcreteOptimizer::Annealing<dim>;
+			using StateType = OptLib::ConcreteState::StateStochastic<dim>;
 			AnnealingParams(Point<dim>&& sop, double step, double temperature_end) :
 				h{ step }, endTemperature{ temperature_end }, currentPoint{ std::move(sop) } {}
 			StateType CreateState(FuncInterface::IFunc<dim>* f)
 			{
-				state = new StateStochastic(SetOfPoints<dim + 1, Point<dim>> && State, f, initialTemperature, TemperatureFunction)
+				state = new StateStochastic<dim>(std::move(currentPoint), f, initialTemperature, TemperatureFunction);
 				return state;
 			}
+		};
 	}
 }
 
