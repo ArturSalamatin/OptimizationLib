@@ -67,7 +67,58 @@ namespace OptLib
 		template<size_t dim>
 		class StateStochastic : public StateInterface::IState<dim>
 		{
-
+		protected:
+			double(*Temperature) (double, int);
+			int iteration;
+			double endTemperature;
+			double h;
+		public:
+			double temperature;
+			PointVal<dim> NextRandomState()
+			{
+				PointVal<dim> x = Guess();
+				for (int i = 0; i < dim; i++) {
+					double r = ((double)rand() / RAND_MAX);
+					x.P[i] = 2.0 * r * h + x.P[i] - h;
+				}
+				return x;
+			}
+			PointVal<dim> bestGuess;
+			StateStochastic(Point<dim>&& State, FuncInterface::IFunc<dim>* f, double initialTemperature, double (*TemperatureFunction) (double, int), double step, double temperature_end) :
+				//StateInterface::IState<dim>(std::move(State), f), 
+				temperature{ initialTemperature }, Temperature{ TemperatureFunction }, h{ step }, endTemperature{ temperature_end },iteration{ 0 } 
+			{
+				ItsGuess = FuncInterface::CreateFromPoint(std::move(State), f);
+				bestGuess = ItsGuess;
+			}
+			bool IsConverged(double endTemperature, double) const override
+			{
+				return temperature > endTemperature ? false : true;
+			}
+			void ChangeGuess(PointVal<dim> currentGuess) {
+				ItsGuess = currentGuess;
+			}
+			void UpdateState()
+			{
+				iteration++;
+				temperature = Temperature(temperature, iteration);
+				PointVal<dim> currentGuess = NextRandomState(); //{ FuncInterface::CreateFromPoint(NextRandomState(Guess().P, h), f) };
+				//UpdateState();
+				double dp = exp((Guess().Val - currentGuess.Val) / temperature);
+				if (dp > 1)
+				{
+					ChangeGuess(currentGuess);
+				}
+				else
+				{
+					double p = (double)rand() / RAND_MAX;
+					if (dp > p)
+					{
+						ChangeGuess(currentGuess);
+					}
+				}
+				if (currentGuess < bestGuess) bestGuess = currentGuess;
+			}
 		};
 	} // ConcreteState
 } // OptLib

@@ -41,7 +41,7 @@
 #include "OptLib/Optimizers/OneDim/Dichotomy.h"
 #include "OptLib/Optimizers/NDim/NelderMead.h"
 #include "OptLib/Optimizers/NDim/Newton.h"
-
+#include "OptLib/Optimizers/NDim/Annealing.h"
 #include "OptLib/Optimizers/OverallOptimizer.h"
 
 #include "OptLib/RegressionLib/RegressionInterface.h"
