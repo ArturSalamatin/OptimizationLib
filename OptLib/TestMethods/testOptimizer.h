@@ -168,10 +168,10 @@ namespace OptLib
 			{
 				std::cout << "******OverallOptimizer Annealing test start*****\n";
 
-				OptimizerParams prm{ 0.001, 0.001, 500 };
+				OptimizerParams prm{ 0, 0, 10000 };
 				ConcreteFunc::Paraboloid2D f{ SetOfPoints<2,Point<2>>{ { {1,0}, {0,10}}} };
 				Point<2> P{ { 0, -1} };
-				ConcreteState::StateStochastic<2> State{std::move(P), &f, 1000, TestTemperature, 0.07, 0 };
+				ConcreteState::StateStochastic<2> State{std::move(P), &f, 10000, TestTemperature, 0.8, 0 };
 
 				Optimizer<2, ConcreteState::StateStochastic<2>, FuncInterface::IFunc> opt{ &State, &f, prm };
 

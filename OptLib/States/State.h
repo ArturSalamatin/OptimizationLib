@@ -93,7 +93,7 @@ namespace OptLib
 			}
 			bool IsConverged(double endTemperature, double) const override
 			{
-				return temperature > endTemperature ? true : false;
+				return temperature > endTemperature ? false : true;
 			}
 			void ChangeGuess(PointVal<dim> currentGuess) {
 				ItsGuess = currentGuess;
