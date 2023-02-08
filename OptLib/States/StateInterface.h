@@ -29,7 +29,7 @@ namespace OptLib
 			bool IsConverged(double abs_tol, double rel_tol) const override
 			{// is average and relative tolerance met?
 				auto [avg, disp] = GuessDomain().Dispersion();
-				auto [var,std]{ VarCoef<PointVal<dim>>(avg, disp) };
+				auto [var,std] = VarCoef<PointVal<dim>>(avg, disp) ;
 
 				for (int i = 0; i < dim; i++)
 				{

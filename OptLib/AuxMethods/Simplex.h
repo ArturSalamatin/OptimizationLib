@@ -22,7 +22,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256/8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -40,7 +41,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] + arr2[i];
 		}
 		
@@ -63,8 +64,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
-
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -82,7 +83,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] - arr2[i];
 		}
 
@@ -97,7 +98,8 @@ namespace OptLib
 		__m256d Val = _mm256_set1_pd(val);
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -115,7 +117,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr[i] / val;
 		}
 
@@ -133,7 +135,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -152,7 +155,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] / arr2[i];
 		}
 
@@ -169,7 +172,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -187,7 +191,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] * arr2[i];
 		}
 
@@ -204,7 +208,8 @@ namespace OptLib
 		__m256d Val = _mm256_set1_pd(val);
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -222,7 +227,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr[i] * val;
 		}
 		return result;
@@ -239,7 +244,8 @@ namespace OptLib
 		Point<dim> result;
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -256,7 +262,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = std::sqrt(arr[i]);
 		}
 
@@ -269,7 +275,9 @@ namespace OptLib
 		Point<dim> result;
 		__m256d x;
 		static const __m256d signmask = _mm256_set1_pd(-0.0f); // 0x80000000
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		for (size_t i = 0; i < itr; i++)
@@ -282,7 +290,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; ++i)
 				result[i] = std::abs(arr[i]);
 		}
 		return result;
@@ -294,7 +302,7 @@ namespace OptLib
 		auto z = x * y;
 
 		double s = 0;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; ++i)
 			s += z[i];
 		return s;
 	}
@@ -304,9 +312,7 @@ namespace OptLib
 		o << "{ " << output[0];
 		if constexpr (dim > 1)
 		{
-			for (int i = 1; i < dim; i++) {
-
-
+			for (size_t i = 1; i < dim; ++i) {
 				o << ", " << output[i];
 			}
 		}
@@ -314,7 +320,6 @@ namespace OptLib
 
 		return o;
 	}
-
 
 	/// <summary>
 	/// Envelope for the Point<dim>
@@ -422,26 +427,26 @@ namespace OptLib
 	template<size_t dim>
 	PointVal<dim> operator* (PointVal<dim> p, double val)
 	{
-		return PointVal<dim>{std::move(p.P * val), p.Val* val};
+		return {std::move(p.P * val), p.Val* val};
 	}
-	/// elementwise division of vector * vector
+	/// elementwise division of vector / vector
 	template<size_t dim>
 	PointVal<dim> operator/(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P/ arr2.P), arr1.Val/ arr2.Val};
+		return {std::move(arr1.P/ arr2.P), arr1.Val/ arr2.Val};
 	}
 
 	///  elementwise sqrt nnn
 	template<size_t dim>
 	PointVal<dim> sqrt(const PointVal<dim>& p)
 	{
-		return PointVal<dim>{ sqrt<dim>(p.P), std::sqrt(p.Val) };
+		return { sqrt<dim>(p.P), std::sqrt(p.Val) };
 	}
 	///  elementwise abs
 	template<size_t dim>
 	PointVal<dim> abs(const PointVal<dim>& p)
 	{
-		return PointVal<dim>{ abs<dim>(p.P), std::abs(p.Val) };
+		return { abs<dim>(p.P), std::abs(p.Val) };
 	}
 	/// <summary>
 	/// Distance between two points
@@ -453,7 +458,7 @@ namespace OptLib
 	double dist(const PointVal<dim>& p1, const PointVal<dim>& p2)
 	{
 		double res = 0.0;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; i++)
 			res += (p2[i] - p1[i]) * (p2[i] - p1[i]);
 
 		return std::sqrt(res);
@@ -472,22 +477,26 @@ namespace OptLib
 	/// <param name="disp"></param>
 	/// <returns></returns>
 	template<typename point>
-	std::pair<point, point> VarCoef(const point& avg, point disp)
+	std::pair<point, point> VarCoef(const point& avg, const point& disp)
 	{// requires sqrt(vector), abs(vector), vector/vector
-		disp = sqrt(disp);
-		return std::pair{ std::move(disp / abs(avg)), std::move(disp) };
+		auto disp0 = sqrt(disp);
+		return std::pair{ disp0 / abs(avg), disp0 };
 	}
-
-
 
 	template<size_t count, typename point>
 	using SetOfPoints = std::array<point, count>;
 
+	/// <summary>
+	/// A matrix*vector multiplication
+	/// </summary>
+	/// <param name="A"></param>
+	/// <param name="B"></param>
+	/// <returns></returns>
 	template<size_t dim>
 	Point<dim> operator* (const SetOfPoints<dim, Point<dim>>& A, const Point<dim>& B)
 	{
 		Point<dim> out;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; i++)
 		{
 			out[i] = dot_product(A[i], B);
 		}
@@ -500,7 +509,7 @@ namespace OptLib
 		o << "{ " << output[0];
 		if constexpr (count > 1)
 		{
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; i++)
 				o << "; " << output[i];
 		}
 		o << " }";
@@ -528,7 +537,7 @@ namespace OptLib
 		point Mean() const
 		{ // requires vector+vector and vector/double
 			point result{ Points()[0] };
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; i++)
 				result = result + Points()[i];
 			result = result / (count + 0.0);
 			return result;
@@ -538,7 +547,7 @@ namespace OptLib
 			point avg{ Mean() };
 			point result = (Points()[0] - avg) * (Points()[0] - avg);
 
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; i++)
 				result = result + (Points()[i] - avg) * (Points()[i] - avg);
 
 			return { avg, result / (count + 0.0) };
@@ -550,7 +559,7 @@ namespace OptLib
 	std::ostream& operator<< (std::ostream& o, const RawSetOfPoints<count, point>& output)
 	{
 		o << "{ " << output[0];
-		for (int i = 1; i < count; i++)
+		for (size_t i = 1; i < count; i++)
 			o << "; " << output[i];
 		o << " }";
 		return o;
@@ -574,7 +583,7 @@ namespace OptLib
 		static SetOfPoints<count, pointval> make_field(SetOfPoints<count, point>&& _s, std::array<double, count>&& FuncVals)
 		{
 			SetOfPoints<count, pointval> P;
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 				P[i] = pointval{ std::move(_s[i]), FuncVals[i] };
 			return P;
 		}
@@ -587,7 +596,7 @@ namespace OptLib
 		SetOfPoints<count, point> PointsNoVal() const
 		{
 			SetOfPoints<count, point> out{};
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 				out[i] = Points()[i].P;
 			return out;
 		}
