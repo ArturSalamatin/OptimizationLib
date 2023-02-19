@@ -6,7 +6,7 @@ namespace OptLib
 	namespace FuncParamInterface
 	{
 		/// <summary>
-		/// Function interface that takes vector(dimP) of parameters and vector(dimX) of arguments
+		/// Function interface that takes array(dimP) of parameters and array(dimX) of arguments
 		/// </summary>
 		template<size_t dimX, size_t dimP>
 		class IFuncParam

@@ -37,6 +37,14 @@ namespace OptLib
 		{
 		public:
 			virtual Grad<dim> grad(const Point<dim>& x) const = 0;
+			template<size_t count>
+			std::array<double, count> grad(const SetOfPoints<count, Point<dim>>& x) const
+			{
+				std::array<double, count> out;
+				for (int i = 0; i < count; i++)
+					out[i] = this->grad(x[i]);
+				return out;
+			}
 		};
 
 		template <size_t dim>

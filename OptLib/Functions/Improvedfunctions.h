@@ -38,12 +38,12 @@ namespace OptLib
 
 			double operator() (const Point<dimX>& x, const Point<dimP>& a) const override
 			{
-				const_cast<ICounterFuncParam*>(this)->Counter += 1;
+				/*const_cast<ICounterFuncParam*>(this)->*/Counter += 1;
 
 				return (*f)(x, a);
 			}
 
-			size_t Counter = 0;
+			mutable size_t Counter = 0;
 		};
 
 	} // FuncWithCounter
