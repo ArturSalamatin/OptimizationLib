@@ -9,7 +9,6 @@
 	#include "OptLib/TestMethods/testState.h"
 	#include "OptLib/TestMethods/testOptimizer.h"
 	#include "OptLib/TestMethods/testRegression.h"
-	#include "OptLib/TestMethods/Test.h"
 #endif // DEBUG_LIB
 
 //namespace plt = matplotlibcpp;

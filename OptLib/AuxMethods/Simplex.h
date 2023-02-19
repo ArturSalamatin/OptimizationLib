@@ -536,7 +536,6 @@ namespace OptLib
 		return o;
 	}
 
-
 	/// <summary>
 	/// A set of points of type point with +-*/ operators overloaded for calculation of Mean, Disp, and VarCoef
 	/// </summary>
@@ -550,13 +549,13 @@ namespace OptLib
 		RawSetOfPoints() = default;
 		RawSetOfPoints(SetOfPoints<count, point> && _s) : ItsSetOfPoints{ std::move(_s) } { }
 		RawSetOfPoints(const SetOfPoints<count, point>& _s) : ItsSetOfPoints{ _s } { }
-		const point& operator[](int i) const { return Points()[i]; }
+		const point& operator[](size_t i) const { return Points()[i]; }
 
 		const SetOfPoints<count, point>& Points() const { return ItsSetOfPoints; }
 		point Mean() const
 		{ // requires vector+vector and vector/double
 			point result{ Points()[0] };
-			for (size_t i = 1; i < count; i++)
+			for (size_t i = 1; i < count; ++i)
 				result = result + Points()[i];
 			result = result / (count + 0.0);
 			return result;
@@ -566,7 +565,7 @@ namespace OptLib
 			point avg{ Mean() };
 			point result = (Points()[0] - avg) * (Points()[0] - avg);
 
-			for (size_t i = 1; i < count; i++)
+			for (size_t i = 1; i < count; ++i)
 				result = result + (Points()[i] - avg) * (Points()[i] - avg);
 
 			return { avg, result / (count + 0.0) };
@@ -578,7 +577,7 @@ namespace OptLib
 	std::ostream& operator<< (std::ostream& o, const RawSetOfPoints<count, point>& output)
 	{
 		o << "{ " << output[0];
-		for (size_t i = 1; i < count; i++)
+		for (size_t i = 1; i < count; ++i)
 			o << "; " << output[i];
 		o << " }";
 		return o;
@@ -599,10 +598,10 @@ namespace OptLib
 		/// <param name="_s"></param>
 		/// <param name="FuncVals"></param>
 		/// <returns></returns>
-		static SetOfPoints<count, pointval> make_field(SetOfPoints<count, point>&& _s, std::array<double, count>&& FuncVals)
+		static SetOfPoints<count, pointval> make_field(SetOfPoints<count, point>&& _s, const std::array<double, count>& FuncVals)
 		{
 			SetOfPoints<count, pointval> P;
-			for (size_t i = 0; i < count; i++)
+			for (size_t i = 0; i < count; ++i)
 				P[i] = pointval{ std::move(_s[i]), FuncVals[i] };
 			return P;
 		}
@@ -610,8 +609,8 @@ namespace OptLib
 		SetOfPointVal() = default;
 		SetOfPointVal(SetOfPoints<count, pointval>&& _s) :
 			RawSetOfPoints<count, pointval>{ std::move(_s) } { }
-		SetOfPointVal(SetOfPoints<count, point>&& _s, std::array<double, count>&& funcVals) : // transforms points to points with vals
-			SetOfPointVal<count, point, pointval>{ std::move(make_field(std::move(_s), std::move(funcVals))) } {}
+		SetOfPointVal(SetOfPoints<count, point>&& _s, const std::array<double, count>& funcVals) : // transforms points to points with vals
+			SetOfPointVal<count, point, pointval>{ make_field(std::move(_s), funcVals) } {}
 		SetOfPoints<count, point> PointsNoVal() const
 		{
 			SetOfPoints<count, point> out{};
@@ -633,10 +632,10 @@ namespace OptLib
 
 	public:
 		SetOfPointValsSort() = default;
-			SetOfPointValsSort(SetOfPoints<count, pointval>&& _s) :
-				SetOfPointVal<count, point, pointval>{ std::move(_s) } { this->Sort(); }
-		SetOfPointValsSort(SetOfPoints<count, point>&& _s, std::array<double, count>&& funcVals) : // transforms points to points with vals
-			SetOfPointVal<count, point, pointval>{ std::move(_s), std::move(funcVals) } {this->Sort(); }
+		SetOfPointValsSort(SetOfPoints<count, pointval>&& _s) :
+			SetOfPointVal<count, point, pointval>{ std::move(_s) } { this->Sort(); }
+		SetOfPointValsSort(SetOfPoints<count, point>&& _s, const std::array<double, count>& funcVals) : // transforms points to points with vals
+			SetOfPointVal<count, point, pointval>{ std::move(_s), funcVals } { this->Sort(); }
 	};
 
 	template<size_t dim>

@@ -6,7 +6,7 @@ namespace OptLib
 	namespace FuncParamInterface
 	{
 		/// <summary>
-		/// Function interface that takes vector(dimP) of parameters and vector(dimX) of arguments
+		/// Function interface that takes array(dimP) of parameters and array(dimX) of arguments
 		/// </summary>
 		template<size_t dimX, size_t dimP>
 		class IFuncParam
@@ -17,7 +17,7 @@ namespace OptLib
 			template<size_t count>
 			Point<count> operator() (const SetOfPoints<count, Point<dimX>>& x, const Point<dimP>& a) const
 			{
-				std::array<double, count> out;
+				std::array<Point<count>::value_type, count> out;
 				for (int i = 0; i < count; i++)
 					out[i] = this->operator()(x[i], a);
 				return out;
