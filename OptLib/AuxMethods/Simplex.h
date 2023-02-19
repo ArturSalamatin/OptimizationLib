@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "SimplexOps.h"
 
 namespace OptLib
 {
@@ -8,11 +9,6 @@ namespace OptLib
 	// https://habr.com/ru/company/intel/blog/205552/
 	// https://chryswoods.com/vector_c++/immintrin.html
 
-	/// <summary>
-	/// An alias for std::array. It is required for the ease of RawPoint construction.
-	/// </summary>
-	template<size_t dim>
-	using Point = std::array<double, dim>;
 	/// elementwise addition of vector + vector
 	template<size_t dim>
 	Point<dim> operator+(const Point<dim>& arr1, const Point<dim>& arr2)
@@ -54,6 +50,18 @@ namespace OptLib
 		p [0] += a;
 		return p;
 	}
+	template<size_t dim>
+	Point<dim> operator + (const Point<dim>& arr1, double consta)
+	{
+		Point<dim> result;
+		std::transform(arr1.begin(), arr1.end(), result.begin(), SimplexOps::UnaryOps::plus<double>{consta });
+		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator + (double consta, const Point<dim>& arr1)
+	{
+		return arr1 + consta
+	}
 
 	/// elementwise subtraction of vector - vector
 	template<size_t dim>
@@ -89,6 +97,18 @@ namespace OptLib
 
 	//	std::transform(arr1.begin(), arr1.end(), arr2.begin(), result.begin(), std::minus<> {});
 		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator - (const Point<dim>& arr1, double consta)
+	{
+		Point<dim> result;
+		std::transform(arr1.begin(), arr1.end(), result.begin(), SimplexOps::UnaryOps::minus<double>{consta });
+		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator -  (double consta, const Point<dim>& arr1)
+	{
+		return arr1 - consta;
 	}
 	/// elementwise division vector / scalar
 	template<size_t dim>
@@ -237,7 +257,7 @@ namespace OptLib
 	{
 		return arr * val;
 	}
-	/// elementwise sqrt bbb
+	/// elementwise sqrt
 	template<size_t dim>
 	Point<dim> sqrt(const Point<dim>& arr)
 	{
@@ -387,7 +407,6 @@ namespace OptLib
 	{
 		double Val;
 		PointVal() = default;
-	//	PointVal(const PointVal& _P) : RawPoint{ (_P.P) }, Val{ _P.Val }{}
 		PointVal(Point<dim>&& _P, double _Val) : RawPoint{ std::move(_P) }, Val{ _Val }{}
 		PointVal(const Point<dim>& _P, double _Val) : RawPoint{ _P }, Val{ _Val }{}
 		bool operator<(const PointVal& rhs)
@@ -399,41 +418,41 @@ namespace OptLib
 	template<size_t dim>
 	PointVal<dim> operator+(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P + arr2.P), arr1.Val + arr2.Val};
+		return PointVal<dim>{arr1.P + arr2.P, arr1.Val + arr2.Val};
 	}
 	/// elementwise addition of vector + value
 	PointVal<1> operator+(PointVal<1>& p, double a)
 	{
-		return PointVal<1>{std::move(p.P + a),p.Val};
+		return PointVal<1>{p.P + a,p.Val};
 	}
 	/// elementwise subtraction of vector - vector
 	template<size_t dim>
 	PointVal<dim> operator-(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P - arr2.P), arr1.Val - arr2.Val};
+		return PointVal<dim>{arr1.P - arr2.P, arr1.Val - arr2.Val};
 	}
 	/// elementwise division vector / scalar
 	template<size_t dim>
 	PointVal<dim> operator/(PointVal<dim> arr, double val)
 	{
-		return PointVal<dim>{ std::move(arr.P / val), arr.Val / val };
+		return PointVal<dim>{ arr.P / val, arr.Val / val };
 	}
 	/// elementwise multiplication of vector * vector
 	template<size_t dim>
 	PointVal<dim> operator*(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P* arr2.P), arr1.Val* arr2.Val};
+		return PointVal<dim>{arr1.P* arr2.P, arr1.Val* arr2.Val};
 	}
 	template<size_t dim>
 	PointVal<dim> operator* (PointVal<dim> p, double val)
 	{
-		return {std::move(p.P * val), p.Val* val};
+		return {p.P * val, p.Val* val};
 	}
 	/// elementwise division of vector / vector
 	template<size_t dim>
 	PointVal<dim> operator/(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return {std::move(arr1.P/ arr2.P), arr1.Val/ arr2.Val};
+		return {arr1.P/ arr2.P, arr1.Val/ arr2.Val};
 	}
 
 	///  elementwise sqrt nnn

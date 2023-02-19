@@ -9,6 +9,7 @@
 	#include "OptLib/TestMethods/testState.h"
 	#include "OptLib/TestMethods/testOptimizer.h"
 	#include "OptLib/TestMethods/testRegression.h"
+	#include "OptLib/TestMethods/Test.h"
 #endif // DEBUG_LIB
 
 //namespace plt = matplotlibcpp;
@@ -23,6 +24,12 @@ int main()
 	// test Simplex
 	OptLib::UnitTests::testSimplex::testPointOperations();
 	OptLib::UnitTests::testSimplex::testSimplexVal();
+
+	OptLib::UnitTests::testSimplex::test_plus_point();
+	OptLib::UnitTests::testSimplex::test_plus_scalar();
+	OptLib::UnitTests::testSimplex::test_scalar_minus();
+	OptLib::UnitTests::testSimplex::test_point_minus();
+	OptLib::UnitTests::testSimplex::test_point_multi();
 	
 	// test functions
 	OptLib::UnitTests::testFunction::testGradient();
