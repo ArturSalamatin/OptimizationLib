@@ -18,10 +18,10 @@ namespace OptLib
 			{
 				// transform coefficientts to hessian symmetric matrix
 				// make the hessian matrix symmetric
-				for (int i = 0; i < dim; i++)
+				for (size_t i = 0; i < dim; ++i)
 				{
 					hessian[i][i] *= 2;
-					for (int j = i + 1; j < dim; j++)
+					for (size_t j = i + 1; j < dim; ++j)
 					{
 						double temp = (hessian[i][j] + hessian[j][i]);
 						hessian[i][j] = temp;
@@ -29,8 +29,8 @@ namespace OptLib
 					}
 				}
 				// make the coefficient matrix symmetric
-				for (int i = 0; i < dim; i++)
-					for (int j = i + 1; j < dim; j++)
+				for (size_t i = 0; i < dim; ++i)
+					for (size_t j = i + 1; j < dim; ++j)
 					{
 						double temp = (coef_matrix[i][j] + coef_matrix[j][i]) / 2.0;
 						coef_matrix[i][j] = temp;
@@ -46,10 +46,10 @@ namespace OptLib
 			virtual double operator()(const Point<dim>& x) const override
 			{
 				double result = 0.0;
-				for (int i = 0; i < dim; i++)
+				for (size_t i = 0; i < dim; ++i)
 				{
 					result += hessian[i][i] / 2.0 * x[i] * x[i];
-					for (int j = i + 1; j < dim; j++)
+					for (size_t j = i + 1; j < dim; ++j)
 						result += hessian[i][j] * x[i] * x[j];
 				}
 				return result;
@@ -58,7 +58,7 @@ namespace OptLib
 			virtual Point<dim> grad(const Point<dim>& x) const override
 			{
 				Point<dim> result{};
-				for (int i = 0; i < dim; i++)
+				for (size_t i = 0; i < dim; ++i)
 					result[i] = 2*dot_product(x, CoefMatrixRow(i));
 				return result;
 			}
@@ -73,7 +73,7 @@ namespace OptLib
 			{
 				return coef_matrix;
 			}
-			const Point<dim>& CoefMatrixRow(int i) const
+			const Point<dim>& CoefMatrixRow(size_t i) const
 			{
 				return CoefMatrix()[i];
 			}
@@ -201,7 +201,7 @@ namespace OptLib
 			virtual double operator () (const Point<dim>& x) const override
 			{
 				double res = 0.0;
-				for (int i = 0; i < dim; i++)
+				for (size_t i = 0; i < dim; ++i)
 				{
 					res += x[i] * x[i];
 				}
@@ -214,7 +214,7 @@ namespace OptLib
 			Himmel()
 			{
 #ifdef DEBUG_LIB
-				std::cout << "Himmel funcion  has been instantiated.\n";
+				std::cout << "Himmel funcion  has been created.\n";
 				std::cout << "f(3,2) = " << this->operator()(Point<2>{3, 2}) << '\n';
 				std::cout << "f(-2.805118,3.131312) = " << this->operator()(Point<2>{-2.805118, 3.131312}) << '\n';
 				std::cout << "f(-3.779310,-3.283186) = " << this->operator()(Point<2>{-3.779310, -3.283186}) << '\n';
@@ -239,6 +239,33 @@ namespace OptLib
 			}
 		};
 
-	} // ConcreteFuncs
+		class Rozenbrok : public FuncInterface::IFuncWithHess<2>
+		{
+		public:
+			Rozenbrok()
+			{
+#ifdef DEBUG_LIB
+				std::cout << "Rozenbrok funcion has been instantiated.\n";
+				std::cout << "f(1,1) = " << this->operator()(Point<2>{1, 1}) << '\n';
+#endif // DEBUG_LIB
+			}
+			double operator() (const Point<2>& x) const override
+			{
+				return std::pow((1 - x[0]), 2) + 100 * std::pow(x[1] - x[0] * x[0], 2);
+			}
 
+			virtual Point<2> grad(const Point<2>& x) const override
+			{
+				return Point<2>{ {-2 * x[0] * (1 - x[0] + 200 * (x[1] - x[0] * x[0])), 200 * (x[1] - x[0] * x[0])} };
+			}
+
+			virtual Hess<2> hess(const Point<2>& x) const override
+			{
+				return Hess<2> { { {-2 * (1 - x[0] + 200 * (x[1] - x[0] * x[0])) - 2 * x[0] * (-1 - 400 * x[0]),
+					-400 * x[0]},{ -400 * x[0], 200 }}
+				};
+			}
+		};
+
+	} // ConcreteFuncs
 } // OptLib

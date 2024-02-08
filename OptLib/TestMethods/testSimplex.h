@@ -63,6 +63,51 @@ namespace OptLib
 
 				std::cout << "******Simplex test end*******\n\n";
 			}
+
+
+			static void test_plus_point()
+			{
+				Point<2> p1{ 1, 2 }, p2{ 3, 4 };
+
+				std::cout << "Take point:"
+					<< "\np1 = " << p1
+					<< "\nand point:"
+					<< "\np2 = " << p2
+					<< "\nand ADD them together to get:"
+					<< "\nout = " << p1 + p2
+					<< "\n\n";
+			}
+			static void test_plus_scalar()
+			{
+				Point<2> p1{ 1.0, 2.0 };
+				std::cout << "point([1,2]) + scalar(4.7)\n"
+					<< p1 + 4.7
+					<< "\n\n";
+
+			}
+			static void test_point_minus()
+			{
+				Point<2> p1{ 1, 2 }, p2{ 3, 4 };
+				std::cout << "Point([3,4]) - point([1,2])\n"
+					<< "\n" << p2 - p1
+					<< "\n\n";
+
+			}
+			static void test_scalar_minus()
+			{
+				Point<2> p1{ 1, 2 };
+				std::cout << "Point([1,2]) - scalar(4.7)\n"
+					<< p1 - 4.7
+					<< "\n\n";
+			}
+			static void test_point_multi()
+			{
+				Point<2> p1{ 1, 2 }, p2{ 3, 4 };
+				std::cout << "Point([1,2]) * scalar(4.7)\n"
+					<< p1 * -1
+					<< "\n\n";
+			}
+
 		};
 	} // UnitTests
 } // OptLib

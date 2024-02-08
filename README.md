@@ -12,3 +12,5 @@ Alina Gismatullina @GAlinaD1
 Rustam Fahrutdinov @FakhrutdinovRustam
 
 Gusman Ahmetzyanov @Top44ic
+
+Semyon Serov @SerSemyon

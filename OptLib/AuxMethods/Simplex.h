@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "SimplexOps.h"
 
 namespace OptLib
 {
@@ -8,11 +9,6 @@ namespace OptLib
 	// https://habr.com/ru/company/intel/blog/205552/
 	// https://chryswoods.com/vector_c++/immintrin.html
 
-	/// <summary>
-	/// An alias for std::array. It is required for the ease of RawPoint construction.
-	/// </summary>
-	template<size_t dim>
-	using Point = std::array<double, dim>;
 	/// elementwise addition of vector + vector
 	template<size_t dim>
 	Point<dim> operator+(const Point<dim>& arr1, const Point<dim>& arr2)
@@ -22,7 +18,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256/8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -40,7 +37,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] + arr2[i];
 		}
 		
@@ -53,6 +50,18 @@ namespace OptLib
 		p [0] += a;
 		return p;
 	}
+	template<size_t dim>
+	Point<dim> operator + (const Point<dim>& arr1, double consta)
+	{
+		Point<dim> result;
+		std::transform(arr1.begin(), arr1.end(), result.begin(), SimplexOps::UnaryOps::plus<double>{consta });
+		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator + (double consta, const Point<dim>& arr1)
+	{
+		return arr1 + consta
+	}
 
 	/// elementwise subtraction of vector - vector
 	template<size_t dim>
@@ -63,8 +72,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
-
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -82,12 +91,24 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] - arr2[i];
 		}
 
 	//	std::transform(arr1.begin(), arr1.end(), arr2.begin(), result.begin(), std::minus<> {});
 		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator - (const Point<dim>& arr1, double consta)
+	{
+		Point<dim> result;
+		std::transform(arr1.begin(), arr1.end(), result.begin(), SimplexOps::UnaryOps::minus<double>{consta });
+		return result;
+	}
+	template<size_t dim>
+	Point<dim> operator -  (double consta, const Point<dim>& arr1)
+	{
+		return arr1 - consta;
 	}
 	/// elementwise division vector / scalar
 	template<size_t dim>
@@ -97,7 +118,8 @@ namespace OptLib
 		__m256d Val = _mm256_set1_pd(val);
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -115,7 +137,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr[i] / val;
 		}
 
@@ -133,7 +155,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -152,7 +175,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] / arr2[i];
 		}
 
@@ -169,7 +192,8 @@ namespace OptLib
 		__m256d x;
 		__m256d y;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		if constexpr (itr > 0)
@@ -187,7 +211,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr1[i] * arr2[i];
 		}
 
@@ -204,7 +228,8 @@ namespace OptLib
 		__m256d Val = _mm256_set1_pd(val);
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -222,7 +247,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = arr[i] * val;
 		}
 		return result;
@@ -232,14 +257,15 @@ namespace OptLib
 	{
 		return arr * val;
 	}
-	/// elementwise sqrt 
+	/// elementwise sqrt
 	template<size_t dim>
 	Point<dim> sqrt(const Point<dim>& arr)
 	{
 		Point<dim> result;
 		__m256d x;
 
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 
 		constexpr size_t itr = dim / rg_size;
 
@@ -256,7 +282,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; i++)
 				result[i] = std::sqrt(arr[i]);
 		}
 
@@ -269,7 +295,9 @@ namespace OptLib
 		Point<dim> result;
 		__m256d x;
 		static const __m256d signmask = _mm256_set1_pd(-0.0f); // 0x80000000
-		constexpr size_t rg_size = 256 / 8 / sizeof(double);
+
+		constexpr size_t byte_size = 8;
+		constexpr size_t rg_size = 256 / byte_size / sizeof(Point<dim>::value_type);
 		constexpr size_t itr = dim / rg_size;
 
 		for (size_t i = 0; i < itr; i++)
@@ -282,7 +310,7 @@ namespace OptLib
 
 		if constexpr (dim % rg_size != 0)
 		{
-			for (int i = itr * rg_size; i < dim; i++)
+			for (size_t i = itr * rg_size; i < dim; ++i)
 				result[i] = std::abs(arr[i]);
 		}
 		return result;
@@ -294,7 +322,7 @@ namespace OptLib
 		auto z = x * y;
 
 		double s = 0;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; ++i)
 			s += z[i];
 		return s;
 	}
@@ -304,9 +332,7 @@ namespace OptLib
 		o << "{ " << output[0];
 		if constexpr (dim > 1)
 		{
-			for (int i = 1; i < dim; i++) {
-
-
+			for (size_t i = 1; i < dim; ++i) {
 				o << ", " << output[i];
 			}
 		}
@@ -314,7 +340,6 @@ namespace OptLib
 
 		return o;
 	}
-
 
 	/// <summary>
 	/// Envelope for the Point<dim>
@@ -382,7 +407,6 @@ namespace OptLib
 	{
 		double Val;
 		PointVal() = default;
-	//	PointVal(const PointVal& _P) : RawPoint{ (_P.P) }, Val{ _P.Val }{}
 		PointVal(Point<dim>&& _P, double _Val) : RawPoint{ std::move(_P) }, Val{ _Val }{}
 		PointVal(const Point<dim>& _P, double _Val) : RawPoint{ _P }, Val{ _Val }{}
 		bool operator<(const PointVal& rhs)
@@ -394,54 +418,54 @@ namespace OptLib
 	template<size_t dim>
 	PointVal<dim> operator+(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P + arr2.P), arr1.Val + arr2.Val};
+		return PointVal<dim>{arr1.P + arr2.P, arr1.Val + arr2.Val};
 	}
 	/// elementwise addition of vector + value
 	PointVal<1> operator+(PointVal<1>& p, double a)
 	{
-		return PointVal<1>{std::move(p.P + a),p.Val};
+		return PointVal<1>{p.P + a,p.Val};
 	}
 	/// elementwise subtraction of vector - vector
 	template<size_t dim>
 	PointVal<dim> operator-(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P - arr2.P), arr1.Val - arr2.Val};
+		return PointVal<dim>{arr1.P - arr2.P, arr1.Val - arr2.Val};
 	}
 	/// elementwise division vector / scalar
 	template<size_t dim>
 	PointVal<dim> operator/(PointVal<dim> arr, double val)
 	{
-		return PointVal<dim>{ std::move(arr.P / val), arr.Val / val };
+		return PointVal<dim>{ arr.P / val, arr.Val / val };
 	}
 	/// elementwise multiplication of vector * vector
 	template<size_t dim>
 	PointVal<dim> operator*(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P* arr2.P), arr1.Val* arr2.Val};
+		return PointVal<dim>{arr1.P* arr2.P, arr1.Val* arr2.Val};
 	}
 	template<size_t dim>
 	PointVal<dim> operator* (PointVal<dim> p, double val)
 	{
-		return PointVal<dim>{std::move(p.P * val), p.Val* val};
+		return {p.P * val, p.Val* val};
 	}
-	/// elementwise division of vector * vector
+	/// elementwise division of vector / vector
 	template<size_t dim>
 	PointVal<dim> operator/(const PointVal<dim>& arr1, const PointVal<dim>& arr2)
 	{
-		return PointVal<dim>{std::move(arr1.P/ arr2.P), arr1.Val/ arr2.Val};
+		return {arr1.P/ arr2.P, arr1.Val/ arr2.Val};
 	}
 
 	///  elementwise sqrt nnn
 	template<size_t dim>
 	PointVal<dim> sqrt(const PointVal<dim>& p)
 	{
-		return PointVal<dim>{ sqrt<dim>(p.P), std::sqrt(p.Val) };
+		return { sqrt<dim>(p.P), std::sqrt(p.Val) };
 	}
 	///  elementwise abs
 	template<size_t dim>
 	PointVal<dim> abs(const PointVal<dim>& p)
 	{
-		return PointVal<dim>{ abs<dim>(p.P), std::abs(p.Val) };
+		return { abs<dim>(p.P), std::abs(p.Val) };
 	}
 	/// <summary>
 	/// Distance between two points
@@ -453,7 +477,7 @@ namespace OptLib
 	double dist(const PointVal<dim>& p1, const PointVal<dim>& p2)
 	{
 		double res = 0.0;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; i++)
 			res += (p2[i] - p1[i]) * (p2[i] - p1[i]);
 
 		return std::sqrt(res);
@@ -472,22 +496,26 @@ namespace OptLib
 	/// <param name="disp"></param>
 	/// <returns></returns>
 	template<typename point>
-	std::pair<point, point> VarCoef(const point& avg, point disp)
+	std::pair<point, point> VarCoef(const point& avg, const point& disp)
 	{// requires sqrt(vector), abs(vector), vector/vector
-		disp = sqrt(disp);
-		return std::pair{ std::move(disp / abs(avg)), std::move(disp) };
+		auto disp0 = sqrt(disp);
+		return std::pair{ disp0 / abs(avg), disp0 };
 	}
-
-
 
 	template<size_t count, typename point>
 	using SetOfPoints = std::array<point, count>;
 
+	/// <summary>
+	/// A matrix*vector multiplication
+	/// </summary>
+	/// <param name="A"></param>
+	/// <param name="B"></param>
+	/// <returns></returns>
 	template<size_t dim>
 	Point<dim> operator* (const SetOfPoints<dim, Point<dim>>& A, const Point<dim>& B)
 	{
 		Point<dim> out;
-		for (int i = 0; i < dim; i++)
+		for (size_t i = 0; i < dim; i++)
 		{
 			out[i] = dot_product(A[i], B);
 		}
@@ -500,14 +528,13 @@ namespace OptLib
 		o << "{ " << output[0];
 		if constexpr (count > 1)
 		{
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; i++)
 				o << "; " << output[i];
 		}
 		o << " }";
 
 		return o;
 	}
-
 
 	/// <summary>
 	/// A set of points of type point with +-*/ operators overloaded for calculation of Mean, Disp, and VarCoef
@@ -522,13 +549,13 @@ namespace OptLib
 		RawSetOfPoints() = default;
 		RawSetOfPoints(SetOfPoints<count, point> && _s) : ItsSetOfPoints{ std::move(_s) } { }
 		RawSetOfPoints(const SetOfPoints<count, point>& _s) : ItsSetOfPoints{ _s } { }
-		const point& operator[](int i) const { return Points()[i]; }
+		const point& operator[](size_t i) const { return Points()[i]; }
 
 		const SetOfPoints<count, point>& Points() const { return ItsSetOfPoints; }
 		point Mean() const
 		{ // requires vector+vector and vector/double
 			point result{ Points()[0] };
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; ++i)
 				result = result + Points()[i];
 			result = result / (count + 0.0);
 			return result;
@@ -538,7 +565,7 @@ namespace OptLib
 			point avg{ Mean() };
 			point result = (Points()[0] - avg) * (Points()[0] - avg);
 
-			for (int i = 1; i < count; i++)
+			for (size_t i = 1; i < count; ++i)
 				result = result + (Points()[i] - avg) * (Points()[i] - avg);
 
 			return { avg, result / (count + 0.0) };
@@ -550,7 +577,7 @@ namespace OptLib
 	std::ostream& operator<< (std::ostream& o, const RawSetOfPoints<count, point>& output)
 	{
 		o << "{ " << output[0];
-		for (int i = 1; i < count; i++)
+		for (size_t i = 1; i < count; ++i)
 			o << "; " << output[i];
 		o << " }";
 		return o;
@@ -571,10 +598,10 @@ namespace OptLib
 		/// <param name="_s"></param>
 		/// <param name="FuncVals"></param>
 		/// <returns></returns>
-		static SetOfPoints<count, pointval> make_field(SetOfPoints<count, point>&& _s, std::array<double, count>&& FuncVals)
+		static SetOfPoints<count, pointval> make_field(SetOfPoints<count, point>&& _s, const std::array<double, count>& FuncVals)
 		{
 			SetOfPoints<count, pointval> P;
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; ++i)
 				P[i] = pointval{ std::move(_s[i]), FuncVals[i] };
 			return P;
 		}
@@ -582,12 +609,12 @@ namespace OptLib
 		SetOfPointVal() = default;
 		SetOfPointVal(SetOfPoints<count, pointval>&& _s) :
 			RawSetOfPoints<count, pointval>{ std::move(_s) } { }
-		SetOfPointVal(SetOfPoints<count, point>&& _s, std::array<double, count>&& funcVals) : // transforms points to points with vals
-			SetOfPointVal<count, point, pointval>{ std::move(make_field(std::move(_s), std::move(funcVals))) } {}
+		SetOfPointVal(SetOfPoints<count, point>&& _s, const std::array<double, count>& funcVals) : // transforms points to points with vals
+			SetOfPointVal<count, point, pointval>{ make_field(std::move(_s), funcVals) } {}
 		SetOfPoints<count, point> PointsNoVal() const
 		{
 			SetOfPoints<count, point> out{};
-			for (int i = 0; i < count; i++)
+			for (size_t i = 0; i < count; i++)
 				out[i] = Points()[i].P;
 			return out;
 		}
@@ -605,10 +632,10 @@ namespace OptLib
 
 	public:
 		SetOfPointValsSort() = default;
-			SetOfPointValsSort(SetOfPoints<count, pointval>&& _s) :
-				SetOfPointVal<count, point, pointval>{ std::move(_s) } { this->Sort(); }
-		SetOfPointValsSort(SetOfPoints<count, point>&& _s, std::array<double, count>&& funcVals) : // transforms points to points with vals
-			SetOfPointVal<count, point, pointval>{ std::move(_s), std::move(funcVals) } {this->Sort(); }
+		SetOfPointValsSort(SetOfPoints<count, pointval>&& _s) :
+			SetOfPointVal<count, point, pointval>{ std::move(_s) } { this->Sort(); }
+		SetOfPointValsSort(SetOfPoints<count, point>&& _s, const std::array<double, count>& funcVals) : // transforms points to points with vals
+			SetOfPointVal<count, point, pointval>{ std::move(_s), funcVals } { this->Sort(); }
 	};
 
 	template<size_t dim>

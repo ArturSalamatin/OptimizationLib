@@ -23,6 +23,12 @@ int main()
 	// test Simplex
 	OptLib::UnitTests::testSimplex::testPointOperations();
 	OptLib::UnitTests::testSimplex::testSimplexVal();
+
+	OptLib::UnitTests::testSimplex::test_plus_point();
+	OptLib::UnitTests::testSimplex::test_plus_scalar();
+	OptLib::UnitTests::testSimplex::test_scalar_minus();
+	OptLib::UnitTests::testSimplex::test_point_minus();
+	OptLib::UnitTests::testSimplex::test_point_multi();
 	
 	// test functions
 	OptLib::UnitTests::testFunction::testGradient();
@@ -31,6 +37,7 @@ int main()
 	OptLib::UnitTests::testFunction::test2DWithHessNoGrad();
 	OptLib::UnitTests::testFunction::testParaboloid();
 	OptLib::UnitTests::testFunction::testParaboloidAlongDirection();
+	OptLib::UnitTests::testFunction::testRozebrok();
 
 	// test states
 	OptLib::UnitTests::testState::testStateDirect();
@@ -51,7 +58,7 @@ int main()
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithGrid();
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithNelderMead();
 	OptLib::UnitTests::testOptimizer::testOverallOptimizerWithNewton();
-
+	OptLib::UnitTests::testOptimizer::testOverallOptimizerAnnealing();
 	// test regression
 
 	OptLib::UnitTests::testLikelihood::GenerateDataSet<1,1>({1.0}, new OptLib::ConcreteFuncParam::LinearFunc());
