@@ -61,6 +61,7 @@ namespace OptLib
 		{
 			Prm.eps_f = eps_f;
 			Prm.eps_x = eps_x;
+			s = 0;
 			return Optimize<algo>();
 		}
 

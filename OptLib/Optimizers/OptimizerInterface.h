@@ -9,12 +9,12 @@ namespace OptLib
 		class OptimizerAlgorithm
 		{
 		public:
-			static Point<dim> CurrentGuess(const StateInterface::IState<dim>* State) { return State->Guess(); }; // returns current guess
-			static PointVal<dim> CurrentPointAndVal(const StateInterface::IState<dim>* State, const FuncInterface::IFunc<dim>* f) // returns the guess and the function value
-			{
-				Point<dim> p = CurrentGuess(State);
-				return PointVal<dim>{std::move(p), f->operator()(p)};
-			}
+			//static Point<dim> CurrentGuess(const StateInterface::IState<dim>* State) { return State->Guess(); }; // returns current guess
+			//static PointVal<dim> CurrentPointAndVal(const StateInterface::IState<dim>* State, const FuncInterface::IFunc<dim>* f) // returns the guess and the function value
+			//{
+			//	Point<dim> p = CurrentGuess(State);
+			//	return PointVal<dim>{std::move(p), f->operator()(p)};
+			//}
 
 			static bool IsConverged(const StateInterface::IState<dim>* State, double abs_tol, double rel_tol)
 			{
@@ -28,14 +28,14 @@ namespace OptLib
 			static PointVal<dim> Proceed(state* State, const func<dim>* f) { return algo::Proceed(*State, f); }; // continue to next guess. The state is updated
 		};
 
-		template<size_t dim, typename state>
-		class ISimplexAlgo : public OptimizerAlgorithm<dim>
-		{
-		public:
-			static const auto& GuessDomain(const state* State) { return State->GuessDomain(); } // unique for direct methods
-		};
+		//template<size_t dim, typename state>
+		//class ISimplexAlgo : public OptimizerAlgorithm<dim>
+		//{
+		//public:
+		//	static const auto& GuessDomain(const state* State) { return State->GuessDomain(); } // unique for direct methods
+		//};
 
-		/// <summary>
+		/*/// <summary>
 		/// Direct optimization in N-dim space with simplex points sorting according to f(x)
 		/// </summary>
 		template<size_t dim>
@@ -62,6 +62,6 @@ namespace OptLib
 		class IStochasticAlgo : public OptimizerAlgorithm<dim>
 		{
 
-		};
+		};*/
 	} // OptimizerInterface
 } // OptLib

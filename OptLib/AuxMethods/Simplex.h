@@ -232,7 +232,7 @@ namespace OptLib
 	{
 		return arr * val;
 	}
-	/// elementwise sqrt bbb
+	/// elementwise sqrt 
 	template<size_t dim>
 	Point<dim> sqrt(const Point<dim>& arr)
 	{

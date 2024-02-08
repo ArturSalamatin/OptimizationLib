@@ -105,18 +105,18 @@ namespace OptLib
 				auto points = Points;
 				auto fCounter = FCounter;
 
-				std::cout << "******IRegression With Dichotomy test start*****\n";
+				std::cout << "******IRegression With GoldenSearch test start*****\n";
 				data = Data;
 				points = Points;
 				fCounter = FCounter;
-				StateParams::DichotomyParams par{ std::move(points) };
+				StateParams::GoldenSectionParams par{ std::move(points) };
 
 				RegInterface::IRegression<1, 1, IFuncParam<1, 1>,
 					ConcreteReg::LikelihoodLinear,
-					StateParams::DichotomyParams> reg{ std::move(data), &fCounter, par };
+					StateParams::GoldenSectionParams> reg{ std::move(data), &fCounter, par };
 				std::cout << "Overall function calls count: " << fCounter.Counter / (float)testLikelihood::nrolls << '\n';
 
-				std::cout << "******IRegression With Dichotomy test end*****\n\n";
+				std::cout << "******IRegression With GoldenSearch test end*****\n\n";
 
 
 				std::cout << "******IRegression With NelderMead test start*****\n";
