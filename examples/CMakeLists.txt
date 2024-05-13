@@ -35,10 +35,6 @@ macro(add_example name)
   target_compile_definitions(${name} PUBLIC "IS_WINDOWS")
   endif()
 
-
-  
-find_package(OpenMP REQUIRED COMPONENTS CXX)
-
 endmacro()
 
 # include(CMakePrintHelpers)
