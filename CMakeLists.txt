@@ -25,10 +25,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR})
 
 
+find_package(OpenMP REQUIRED COMPONENTS CXX)
+
 # parallel build with MSVC compiler
-# if(MSVC AND MSVC_VERSION GREATER 1400)
-#     add_compile_options(/MP)
-# endif()
+if(MSVC AND MSVC_VERSION GREATER 1400)
+    add_compile_options(/MP)
+endif()
 
 # process examples/CMakeLists.txt
 add_subdirectory(examples)

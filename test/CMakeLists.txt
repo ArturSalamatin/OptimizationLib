@@ -1,5 +1,7 @@
 # https://rknuus.github.io/agility-and-quality/blog/2020/04/15/up-and-google-testing-in-minutes
 # https://matgomes.com/integrate-google-test-into-cmake/
+# https://google.github.io/googletest/primer.html
+# https://www.youtube.com/watch?v=Lp1ifh9TuFI&t=755s
 
 cmake_minimum_required(VERSION 3.14.0)
 

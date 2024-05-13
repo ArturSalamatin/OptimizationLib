@@ -11,17 +11,18 @@ project(examples)
 # CMakeLists.txt file. However, usually you will create only one executable in
 # your cmake projects and use the syntax shown above.
 macro(add_example name)
-   add_executable(${name} ${name}.cpp)
+  add_executable(${name} ${name}.cpp)
   # Header files are located in the following folder.
   # So, <optlib/xxx.h> can be called within te examples project
   # include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..") 
-   target_include_directories(${name} PUBLIC "${PROJECT_SOURCE_DIR}/..")
+  target_include_directories(${name} PUBLIC "${PROJECT_SOURCE_DIR}/..")
 
-   # this is here because the config.h will be generated in PROJECT_BINARY_DIR
-   target_include_directories(${name}
+  # this is here because the config.h will be generated in PROJECT_BINARY_DIR
+  target_include_directories(${name}
   PRIVATE
     ${PROJECT_BINARY_DIR}
-  )
+  )  
+  target_link_libraries(${name} PRIVATE OpenMP::OpenMP_CXX)
 
   # let the preprocessor know about the system name
   # let the preprocessor know about the system name
