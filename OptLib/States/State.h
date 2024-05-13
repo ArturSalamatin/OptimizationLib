@@ -1,5 +1,13 @@
-#pragma once
-#include "stdafx.h"
+#ifndef STATE_H
+#define STATE_H
+
+#include <algorithm>
+#include "../Points/SetOfPoints/PointVals/Point/Point.h"
+#include "../Points/SetOfPoints/PointVals/PointVal.h"
+#include "../Points/SetOfPoints/SetOfPoints.h"
+#include "../Points/Definitions.h"
+#include "../Functions/Interface/FuncInterface.h"
+#include "StateInterface.h"
 
 namespace OptLib
 {
@@ -18,13 +26,14 @@ namespace OptLib
 		{
 		public:
 			StateSegment(const StateSegment&) = default;
-			StateSegment(SetOfPoints<2, Point<1>>&& State, FuncInterface::IFunc<1>* f)
+			StateSegment(const Simplex<1>& State, const FuncInterface::IFunc<1>* f)
 				:
-				StateInterface::IStateSimplex<1, SimplexValNoSort<1>>(std::move(OrderPointsInSegment(State)), f)
+				StateInterface::IStateSimplex<1, SimplexValNoSort<1>>(
+					OrderPointsInSegment(State), f)
 			{}
 
 		protected:
-			SetOfPoints<2, Point<1>> OrderPointsInSegment(SetOfPoints<2, Point<1>>& setOfPoints)
+			auto OrderPointsInSegment(Simplex<1> setOfPoints) -> Simplex<1>
 			{
 				if (setOfPoints[0][0] > setOfPoints[1][0])
 					std::swap(setOfPoints[0], setOfPoints[1]);
@@ -41,16 +50,19 @@ namespace OptLib
 		protected:
 			PointVal<dim> dx{};
 		public:
+
+			using StateInterface::IState<dim>::IState;
+
 			bool IsConverged(double abs_tol, double rel_tol) const override
 			{
 				auto& std = dx;
 				auto var{ abs<dim>(dx / Guess()) };
-				for (int i = 0; i < dim; i++)
+				for (size_t i = 0; i < dim; ++i)
 				{
-					bool f = (((std[i]) < abs_tol) || (var[i] < rel_tol)) && (((std.Val) < abs_tol) || (var.Val < rel_tol));
+					bool f = (std[i] < abs_tol) || (var[i] < rel_tol);
 					if (!f) return false;
 				}
-				return true;
+				return (std.Val < abs_tol) || (var.Val < rel_tol);
 			}
 
 			virtual void UpdateState(const PointVal<dim>& v)
@@ -58,7 +70,6 @@ namespace OptLib
 				dx = abs<dim>(v - Guess());
 				ItsGuess = v;
 			}
-
 		};
 
 		/// <summary>
@@ -84,7 +95,13 @@ namespace OptLib
 				return x;
 			}
 			PointVal<dim> bestGuess;
-			StateStochastic(Point<dim>&& State, FuncInterface::IFunc<dim>* f, double initialTemperature, double (*TemperatureFunction) (double, int), double step, double temperature_end) :
+			StateStochastic(
+				OptLib::Point<dim>&& State, 
+				FuncInterface::IFunc<dim>* f, 
+				double initialTemperature, 
+				double (*TemperatureFunction) (double, int), 
+				double step, 
+				double temperature_end) :
 				//StateInterface::IState<dim>(std::move(State), f), 
 				temperature{ initialTemperature }, Temperature{ TemperatureFunction }, h{ step }, endTemperature{ temperature_end },iteration{ 0 } 
 			{
@@ -93,9 +110,9 @@ namespace OptLib
 			}
 			bool IsConverged(double endTemperature, double) const override
 			{
-				return temperature > endTemperature ? false : true;
+				return temperature < endTemperature;
 			}
-			void ChangeGuess(PointVal<dim> currentGuess) {
+			void ChangeGuess(const PointVal<dim>& currentGuess) {
 				ItsGuess = currentGuess;
 			}
 			void UpdateState()
@@ -122,3 +139,5 @@ namespace OptLib
 		};
 	} // ConcreteState
 } // OptLib
+
+#endif

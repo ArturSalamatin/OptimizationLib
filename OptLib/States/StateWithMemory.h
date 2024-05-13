@@ -1,5 +1,12 @@
-#pragma once
-#include "stdafx.h"
+#ifndef STATEWITHMEMORY_H
+#define STATEWITHMEMORY_H
+
+#include <vector>
+#include "../Points/SetOfPoints/PointVal/PointVal.h"
+#include "../Points/Definitions.h"
+#include "../Functions/Interface/FuncInterface.h"
+#include "StateInterface.h"
+#include "State.h"
 
 namespace OptLib
 {
@@ -11,13 +18,13 @@ namespace OptLib
 			state* State;
 
 		public:
-			StateSimplexMemory(state* State, FuncInterface::IFunc<dim>* f) : 
-				state(std::move((*State).GuessDomain().PointsNoVal()), f), 
+			StateSimplexMemory(state* State, const FuncInterface::IFunc<dim>* f) : 
+				state(State->GuessDomain().PointsNoVal(), f), 
 				State{ State }
 			{
 				a_Memory.push_back(*State); // copies current state to a memory
 			}
-			const std::vector<state>& Memory() { return a_Memory; }
+			const std::vector<state>& Memory() const { return a_Memory; }
 
 			void SetDomain(SetOfPoints<dim + 1, PointVal<dim>>&& newDomain) override
 			{
@@ -26,7 +33,7 @@ namespace OptLib
 			}
 
 		protected:
-			std::vector<state> a_Memory;
+			mutable std::vector<state> a_Memory;
 		};
 
 		/// <summary>
@@ -58,3 +65,5 @@ namespace OptLib
 
 	} // StateWithMemory
 } // OptLib
+
+#endif
