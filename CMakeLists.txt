@@ -2,6 +2,9 @@
 # https://cliutils.gitlab.io/modern-cmake/
 # https://cmake.org/cmake/help/v3.19/index.html
 
+# https://matgomes.com/a-simple-introduction-to-cmake/
+# https://matgomes.com/debugging-wsl-c-cmake-vscode/
+
 cmake_minimum_required(VERSION 3.14.0)
 
 project(OptLib
@@ -31,6 +34,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
 add_subdirectory(examples)
 
 # enable testing
+include(CTest)
 enable_testing()
 # process test/CMakeLists.txt
 add_subdirectory(test)

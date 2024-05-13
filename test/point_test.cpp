@@ -1,11 +1,15 @@
+#include <gtest/gtest.h>
+
 #include <iostream>
+
 #include <optlib/Points/SetOfPoints/PointVals/Point/Point.h>
 #include <optlib/Points/SetOfPoints/PointVals/Point/PointOperators.h>
 
 using namespace OptLib;
 
-int main() try
-{
+
+TEST(Foo, point) {
+
     // testing Point ctors
     auto rp1{Point<3>{1.0, 2.0, 3.0}};
     auto rp2 = rp1;
@@ -14,7 +18,7 @@ int main() try
     auto rp5 = std::move(rp4);
     Point<3> rp6{2.0, 1.0, 3.0};
 
-    // testing Point operators
+     // testing Point operators
     std::cout << rp6 << std::endl;
     rp6 += 3.0;
     rp6 -= 3.0;
@@ -36,12 +40,12 @@ int main() try
     auto dp1{dot_product(rp7, rp8)};
     auto dp2{norm(rp7)};
     auto dp3{dist(rp7, rp8)};
-    
-    std::getchar();
 
-    return 0;
+    ASSERT_EQ(0, 0);
 }
-catch(std::exception& e)
-{
-    std::cout << e.what() << std::endl;
-}
+
+// int main(int argc, char** argv)
+// {
+//     ::testing::InitGoogleTest(&argc, argv);
+//     return RUN_ALL_TESTS();
+// }

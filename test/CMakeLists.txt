@@ -1,28 +1,9 @@
-#
-# This is a CMake makefile.  You can find the cmake utility and
-# information about it at http://www.cmake.org
-#
+# https://rknuus.github.io/agility-and-quality/blog/2020/04/15/up-and-google-testing-in-minutes
+# https://matgomes.com/integrate-google-test-into-cmake/
 
 cmake_minimum_required(VERSION 3.14.0)
 
-# create a variable called target_name and set it to the string "dtest"
-set (target_name optlib_test)
-PROJECT(${target_name})
-
-# compile the dlib/all/source.cpp file into its own object just to make sure it compiles
-# set(OPTLIB_TEST_COMPILE_ALL_SOURCE_CPP ON)
-
-include_directories("${CMAKE_CURRENT_SOURCE_DIR}/..") 
-
-
-
-include(CTest)
-
-add_executable(point_test point_test.cpp)
-add_test(NAME point_test
-         COMMAND point_test)
-
-
+# fetch google test from github
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -31,6 +12,35 @@ FetchContent_Declare(
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+# add_library(GTest::GTest INTERFACE IMPORTED)
+# target_link_libraries(GTest::GTest INTERFACE gtest_main)
+
+
+# create a variable called target_name and set it to the string "test"
+set (target_name test)
+project(${target_name})
 
 
 
+# set(TEST_EXECUTABLE foo_test)
+# set(TEST_NAME foo_gtest)
+# add_executable(${TEST_EXECUTABLE} ${TEST_EXECUTABLE}.cpp)
+# target_include_directories(${TEST_EXECUTABLE} PUBLIC "${PROJECT_SOURCE_DIR}/..")
+# target_link_libraries(${TEST_EXECUTABLE}
+#   PRIVATE 
+#       GTest::GTest
+# ) 
+# add_test(NAME ${TEST_NAME} COMMAND ${TEST_EXECUTABLE})
+
+
+
+set(TEST_EXECUTABLE point_test)
+set(TEST_NAME point_gtest)
+add_executable(${TEST_EXECUTABLE} ${TEST_EXECUTABLE}.cpp)
+target_include_directories(${TEST_EXECUTABLE} PUBLIC "${PROJECT_SOURCE_DIR}/..")
+target_link_libraries(${TEST_EXECUTABLE}
+  # PRIVATE 
+      # GTest::GTest
+      gtest_main
+) 
+add_test(NAME ${TEST_NAME} COMMAND ${TEST_EXECUTABLE})
