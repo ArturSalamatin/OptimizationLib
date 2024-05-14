@@ -5,6 +5,9 @@
 # https://matgomes.com/a-simple-introduction-to-cmake/
 # https://matgomes.com/debugging-wsl-c-cmake-vscode/
 
+# compile with clang
+# https://www.youtube.com/watch?v=5OSO8IRlyXc
+
 cmake_minimum_required(VERSION 3.14.0)
 
 project(OptLib

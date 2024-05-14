@@ -2,7 +2,7 @@
 # https://matgomes.com/integrate-google-test-into-cmake/
 # https://google.github.io/googletest/primer.html
 # https://www.youtube.com/watch?v=Lp1ifh9TuFI&t=755s
-
+# https://www.youtube.com/watch?v=jyQcCWWcIQU
 cmake_minimum_required(VERSION 3.14.0)
 
 # fetch google test from github
@@ -72,6 +72,7 @@ macro(add_google_test name)
 endmacro()
 
 
-add_google_test(foo_test)
+# add_google_test(foo_test)
 add_google_test(point_test)
+add_google_test(fixture_demo)
 
