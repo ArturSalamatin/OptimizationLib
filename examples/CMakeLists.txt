@@ -27,13 +27,24 @@ macro(add_example name)
   # let the preprocessor know about the system name
   # let the preprocessor know about the system name
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-  target_compile_definitions(${name} PUBLIC "IS_LINUX")
+    target_compile_definitions(${name} PUBLIC "IS_LINUX")
   endif()
   if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-  target_compile_definitions(${name} PUBLIC "IS_MACOS")
+    target_compile_definitions(${name} PUBLIC "IS_MACOS")
   endif()
   if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-  target_compile_definitions(${name} PUBLIC "IS_WINDOWS")
+    target_compile_definitions(${name} PUBLIC "IS_WINDOWS")
+  endif()
+
+  # compiler-specific options
+  if(MSVC AND MSVC_VERSION GREATER 1400)
+    target_compile_options(
+      ${name} PRIVATE 
+      /MP)
+  else()
+    target_compile_options(
+      ${name} PRIVATE
+        -Wall -Wextra -pedantic -Werror)
   endif()
 
 endmacro()

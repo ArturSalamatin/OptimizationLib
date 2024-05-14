@@ -8,7 +8,7 @@
 using namespace OptLib;
 
 
-TEST(Foo, point) {
+TEST(Point, ctor) {
 
     // testing Point ctors
     auto rp1{Point<3>{1.0, 2.0, 3.0}};
@@ -18,6 +18,12 @@ TEST(Foo, point) {
     auto rp5 = std::move(rp4);
     Point<3> rp6{2.0, 1.0, 3.0};
 
+    ASSERT_EQ(0, 0);
+}
+
+TEST(Point, operators) {
+
+    Point<3> rp6{2.0, 1.0, 3.0};
      // testing Point operators
     std::cout << rp6 << std::endl;
     rp6 += 3.0;
@@ -37,9 +43,24 @@ TEST(Foo, point) {
     auto rp15{1.0 + rp6};
     auto rp16{1.0 - rp6};
 
+    ASSERT_EQ(0, 0);
+}
+
+TEST(Point, funcs) {
+
+    Point<3> rp6{2.0, 1.0, 3.0};
+
+    auto rp7{rp6 + 1.0};
+    auto rp8{rp6 - 1.0};
+
     auto dp1{dot_product(rp7, rp8)};
     auto dp2{norm(rp7)};
     auto dp3{dist(rp7, rp8)};
 
     ASSERT_EQ(0, 0);
+}
+
+int main(int argc, char **argv) {
+  testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
 }
